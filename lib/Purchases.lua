@@ -1,5 +1,5 @@
 local Purchases = {}
-local Logger = require(script.Parent.Logger)
+local Logger = require(game.ReplicatedStorage.Robase.Logger)
 
 local backend = game:GetService("MarketplaceService")
 local callbacksByPlayerName = {}

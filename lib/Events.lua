@@ -1,12 +1,13 @@
-local Logger = require(script.Parent.Logger)
-local Purchases = require(script.Parent.Purchases)
-local Types = require(script.Parent.Types)
+local Logger = require(game.ReplicatedStorage.Robase.Logger)
+local Purchases = require(game.ReplicatedStorage.Robase.Purchases)
+local Types = require(game.ReplicatedStorage.Robase.Types)
 local Type = Types.Type
+
 local Events = {}
 
 Events.EventHandler = Type("EventHandler")          --: <this T>(...any) => void
 Events.EventMap = Type("EventMap", {                --: <T>{[event:string]: EventHandler<T>}
-    OnCreate = Type("OnCreate"),                    --: <this T>() => void
+    OnCreated = Type("OnCreated"),                    --: <this T>() => void
     OnPlayerTouched = Type("OnPlayerTouched"),      --: OnPlayerTouched: <this T>(player: Player, playerPart: BasePart) => void
     OnActivated = Type("OnActivated")               --: OnActivated: <this T>(player: Player) => void
 })
@@ -15,11 +16,11 @@ function Events.ConnectPlayers( listeners )
 
     game.Players.PlayerAdded:Connect( function( player )
 
-        if ( listeners.OnJoin ) then
+        if ( listeners.OnJoined ) then
 
             Events.Run( function() 
-                repeat wait(0.2) until player.Character
-                listeners.OnJoin( player )
+                repeat wait(0.1) until player.Character
+                listeners.OnJoined( player )
 
             end )
 
@@ -37,13 +38,13 @@ end
 
 function Events.Connect( object, listeners ) --: <T extends Instance>(T, EventMap<T>) => void
 
-    if ( listeners.OnCreate ) then
+    if ( listeners.OnCreated ) then
 
         if ( object:IsDescendantOf( game.Workspace )) then
 
             Events.Run( function()
                 
-                listeners.OnCreate( object )
+                listeners.OnCreated( object )
 
             end)
 

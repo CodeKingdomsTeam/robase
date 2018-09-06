@@ -6,27 +6,48 @@ Objects.CLASS_TYPE = {
 
 --- Make a new Roblox Instance and optionally provide it with a position,
 --- parent and name
-function Objects.Create( type, position, parent, name ) --: <T extends CLASS_TYPE>(T, position?, parent?, name?) => Instance<T>
+function Objects.Create( type, properties ) 
 
     local object = Instance.new( type )
-    object.Name = name or type
-    if ( position ) then
-        object.Position = position
-    end
-
-    object.Parent = parent or game.Workspace
+    
+    Objects.Modify(object, properties)
 
     return object
 
 end
 
-function Objects.Clone( object, position, parent ) --: <T extends Instance>(T, Vector3?, Object?) => T
+function Objects.Modify( object, properties)
+
+    local parent = nil
+    if(properties.Parent)then
+        parent = properties.Parent
+        properties.Parent = nil
+    end 
+
+    for property, value in pairs(properties)do
+        local ok = pcall(function()
+            object[property] = value
+        end)
+
+        if not ok then
+            if(object:IsA("Model"))then
+                if(property == "Position")then
+                    object:SetPrimaryPartCFrame(value)
+                end 
+            end
+        end
+
+    end
+
+    if(parent)then
+        object.Parent = parent
+    end 
+end 
+
+function Objects.Clone( object, properties ) --: <T extends Instance>(T, Vector3?, Object?) => T
 
     local clone = object:Clone()
-    if ( position ) then
-        clone.Position = position
-    end
-    clone.Parent = parent or game.Workspace
+    Objects.Modify(clone, properties)
 
     return clone
 

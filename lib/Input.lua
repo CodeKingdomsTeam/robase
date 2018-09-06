@@ -8,9 +8,9 @@
 local Input = {}
 
 -- Import libraries and helper functions
-local Logger = require(script.Parent.Logger)
-local Types = require(script.Parent.Types)
-local Events = require(script.Parent.Events)
+local Logger = require(game.ReplicatedStorage.Robase.Logger)
+local Types = require(game.ReplicatedStorage.Robase.Types)
+local Events = require(game.ReplicatedStorage.Robase.Events)
 local Type = Types.Type
 local ContextActionService = game:GetService("ContextActionService")
 
