@@ -14,54 +14,69 @@ local Server = {}
 local Logger = require(script.Parent.Logger)
 local RunService = game:GetService("RunService")
 
--- The table that holds
+-- The table that holds all event handlers/functions, as sorted by event name
 local eventHandlersByName = {}
 
---- Add a particular event that can be used to communicate between the client and server
+--[[
+    Creates a RemoteEvent within the Robase ReplicatedStorage. This is used when sending or
+    recieving event fires. Note that this also adds the event to a virtual event system that allows
+    RemoteEvents to 'work' while testing without a proper client-server.
+]]
 --- @ServerOnly
 function Server.AddEvent( name ) --: string => void
    
+    -- Creates a new RemoteEvent instance
     local newEvent = Instance.new("RemoteEvent", script)
     newEvent.Name = name
 
+    -- Adds entry to virtual event system
     eventHandlersByName[name] = {}
 
 end
 
---- Listens to a specific event and calls a handler function when it fires
+--[[
+    When an event by the specified name is fired, the handler function will execute. Note that this will also
+    listen to the virtual event firing system as well. If the server tries to listen to an event that doesn't 
+    exist, it will create one as well. 
+]]
 --- @ServerOnly
 function Server.ListenToEvent(name, handler) --: (string, ...Serializable => void ) => void
 
     local event = script:WaitForChild(name, 0.1)
 
+    -- If the event doesn't exist, create it, and then grab it
     if ( not event ) then
+
         Server.AddEvent(name)
         event = script:WaitForChild(name, 0.1)
     end
 
+    -- Insert the handler to the virtual event system
     local eventHandlers = eventHandlersByName[name]
     table.insert(eventHandlers, handler)
     
+    -- Connect the event firing to the handler
     event.OnServerEvent:Connect(handler)
-
-    end
 
 end 
 
---- Listens to a specific event from a specified origin player - when it's fired, the method will run
+--[[
+    The handler function will fire only when the event has originated from the originPlayer, allowing
+    selective listening. Please note that this also works with the virtual event system as well.
+]]
 --- @ServerOnly
 function Server.ListenToEventFrom(name, originPlayer, handler) --: (string, Player, ...Serializable => void ) => void
 
     local event = script:WaitForChild(name)
 
+    -- If the event doesn't exist, create it first
     if ( not event ) then
         
         Server.AddEvent(name)
         event = script:WaitForChild(name, 0.1)
-
-        return
     end
 
+    -- Add a wrapper around the handler to ensure that it only executes if the event is from the target player
     local handlerWrapper = function( name, ... )
         local args = {...}
 
@@ -70,27 +85,41 @@ function Server.ListenToEventFrom(name, originPlayer, handler) --: (string, Play
             handler( ... )
         end		
     end
-    Net.ListenToEvent( name, handlerWrapper )
+
+    -- Listen to the event with the wrapped handler
+    Server.ListenToEvent( name, handlerWrapper )
 end
 
--- Fire an event from the server to a specific player
+--[[
+    Fires an event with any additional parameters to the target player only, instead of all online clients. Note
+    that this also makes use of the virtual event systems. 
+]]
 --- @ServerOnly
 function Server.FireEventTo ( name, player, ... ) --: string, Player, ...Serializable => void
     
+    -- If the RunService is also a client, then this is executed within Studio
     if(RunService:IsClient()) then
+
+            -- Iterate through, and execute all the virtual event handlers
             for _, handler in pairs(eventHandlersByName[name]) do
+
 	            handler( player, ... )
             end
+
+            -- The rest of this function isn't necessary, so return now
             return
     end
 
+    -- Try and get the specified event
     local event = script:WaitForChild(name, 0.1)
 
+    -- If there is no event, then it cannot fire! 
     if ( not event ) then
         Logger.Warn("Server.FireEventTo didn't run because the event hasn't been added!")
         return
     end
 
+    -- Should ensure that the specified player is a legimate player
     if(not player:IsA("Player")) then
         Logger.Warn(name .. " event that is being sent from the server does not have a target player specified. Aborting!")
         return
@@ -98,22 +127,27 @@ function Server.FireEventTo ( name, player, ... ) --: string, Player, ...Seriali
 
     Logger.Debug("FireEvent with name " .. name .. " sent to " .. player.Name)
 
+    -- Fire the event to the target client
     event:FireClient( player, player, ...)
 end
 
--- Broadcast an event from the server, sending it to all clients
+--[[
+    Will fire the target event, along with any parameters, to all currently connected clients. Note this also works
+    with the virtual event system. 
+]]
 --- @ServerOnly
 function Server.BroadcastEvent( name, ... ) --: string, ...Serializable => void
     
+    -- Try and find the script
     local event = script:WaitForChild(name, 0.1)
-
+ 
     local arg = {...}
     local argumentsToSend = {}
 
     -- The first entry in the table always seems to get eaten by FireAllClients, so add a buffer
     table.insert(argumentsToSend, name)
     
-    for child, data in pairs(arg) do
+    for _, data in pairs(arg) do
         table.insert(argumentsToSend, data)
     end 
 

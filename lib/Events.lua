@@ -19,7 +19,11 @@ function Events.ConnectPlayers( listeners )
         if ( listeners.OnJoined ) then
 
             Events.Run( function() 
-                repeat wait(0.1) until player.Character
+                if (not player.Character) then
+                    while(not player.Character and player.Character.Parent)then
+                        wait()
+                    end
+                end 
                 listeners.OnJoined( player )
 
             end )

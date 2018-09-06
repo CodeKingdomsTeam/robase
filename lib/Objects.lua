@@ -49,6 +49,11 @@ function Objects.Clone( object, properties ) --: <T extends Instance>(T, Vector3
     local clone = object:Clone()
     Objects.Modify(clone, properties)
 
+    -- Joints don't exist outside of Workspace, so let's ensure cloning doesn't make cars fall apart
+    if(clone:IsA("Model"))then
+        clone:MakeJoints()
+    end
+
     return clone
 
 end
