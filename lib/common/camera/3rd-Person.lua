@@ -2,8 +2,8 @@
 
 -- Dictates the iteration time of the camera loop.  Default is 0.1.
 local cameraUpdateInterval = 0.1
--- Augments speed for camera follow speed. Default is 2. 
-local cameraElasticity = 2 
+-- Augments speed for camera follow speed. Default is 0.2. 
+local cameraElasticity = 0.2 
 -- Dictates how quickly the camera reacts to movements of the target. Default is 0.3.
 local cameraReaction = 0.3
 -- Dictates the amount of camera shake that occurs while the target is moving. Default is 0.005.
@@ -58,7 +58,7 @@ camera.CameraSubject = target
 camera.CameraType = Enum.CameraType.Scriptable
 
 -- Setups tween, taking into account cameraSpeed and cameraElasticity to dictate tween time
-local tweenInfo = TweenInfo.new(cameraSpeed * cameraElasticity)
+local tweenInfo = TweenInfo.new(cameraElasticity)
 local cameraCFrameTween = nil
 
 -- Creates screen blur that is used when the target is too far from the camera
