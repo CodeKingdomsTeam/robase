@@ -8,22 +8,28 @@ describe(
 		local robase
 		local Vector3
 		local ProjectileService
-		before_each(function()
-			habitat = lemur.Habitat.new()
-			robase = LemurUtils.LoadRobase(habitat)
-			Vector3 = habitat.environment.Vector3
-			ProjectileService = habitat:require(robase.ProjectileService)
-		end)
+		before_each(
+			function()
+				habitat = lemur.Habitat.new()
+				robase = LemurUtils.LoadRobase(habitat)
+				Vector3 = habitat.environment.Vector3
+				ProjectileService = habitat:require(robase.ProjectileService)
+			end
+		)
 		describe(
 			"ConnectToEvent",
 			function()
 				local fireProjectileStub
-				before_each(function()
-					fireProjectileStub = stub.new(ProjectileService, "FireProjectile")
-				end)
-				after_each(function()
-					fireProjectileStub:revert()
-				end)
+				before_each(
+					function()
+						fireProjectileStub = stub.new(ProjectileService, "FireProjectile")
+					end
+				)
+				after_each(
+					function()
+						fireProjectileStub:revert()
+					end
+				)
 				it(
 					"should create a remote event and connect to it its FireProjectile function",
 					function()
@@ -35,7 +41,7 @@ describe(
 
 						-- Fire the event on the server and assert that the FireProjectile stub was called with the same arguments.
 						local projectileName = "Arrow"
-						local spawnPosition = Vector3.new(1,1,1)
+						local spawnPosition = Vector3.new(1, 1, 1)
 						fireProjectileEvent:FireServer(projectileName, spawnPosition)
 						assert.spy(fireProjectileStub).was_called(1)
 						assert.spy(fireProjectileStub).was_called_with(ProjectileService, projectileName, spawnPosition)
