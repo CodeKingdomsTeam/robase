@@ -1,3 +1,7 @@
+exclude_files = {
+	".luacheckrc"
+}
+
 stds.roblox = {
 	read_globals = {
 		-- global functions
@@ -18,6 +22,7 @@ stds.roblox = {
 		"shared",
 		"workspace",
 		"plugin",
+		"ypcall",
 		-- types
 		"Axes",
 		"BrickColor",
