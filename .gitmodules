@@ -1,6 +1,6 @@
 [submodule "modules/lemur"]
 	path = modules/lemur
-	url = https://github.com/LPGhatguy/lemur.git
+	url = https://github.com/CodeKingdomsTeam/lemur.git
 [submodule "modules/Utils"]
 	path = modules/Utils
 	url = https://github.com/CodeKingdomsTeam/lua-utils
