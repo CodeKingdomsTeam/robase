@@ -68,6 +68,10 @@ stds.roblox = {
 	}
 }
 
+-- Does not correctly detect usage of ...
+files["lib/Utils.lua"] = {ignore = {"212"}}
+files["spec/Utils_spec.lua"] = {ignore = {"212"}}
+
 std = "lua51+roblox"
 
 files["spec/*.lua"] = {
