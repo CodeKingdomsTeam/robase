@@ -11,6 +11,8 @@ function Utils.Debounce(fn, delayS)
 	local lastResult = nil
 
 	return function(...)
+		local args = {...}
+
 		lastInvocation = lastInvocation + 1
 
 		local thisInvocation = lastInvocation
@@ -21,7 +23,7 @@ function Utils.Debounce(fn, delayS)
 					return
 				end
 
-				lastResult = fn(unpack(arg))
+				lastResult = fn(unpack(args))
 			end
 		)
 
