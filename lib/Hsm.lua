@@ -10,7 +10,6 @@ function Hsm.new()
 		local handlingFsmIndex = nil
 		for i = #hsm.fsms, 1, -1 do
 			if hsm.fsms[i][event] then
-				print(event, i)
 				handlingFsmIndex = i
 			end
 		end
