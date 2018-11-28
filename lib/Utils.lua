@@ -1,11 +1,11 @@
 local Utils = {}
 
 --[[
-	Creates a debounced function that delays invoking fn until after delayS milliseconds have elapsed since the last time the debounced function was invoked.
+	Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.
 ]]
-function Utils.Debounce(fn, delayS)
+function Utils.Debounce(fn, secondsDelay)
 	assert(type(fn) == "function" or (type(fn) == "table" and getmetatable(fn) and getmetatable(fn).__call ~= nil))
-	assert(type(delayS) == "number")
+	assert(type(secondsDelay) == "number")
 
 	local lastInvocation = 0
 	local lastResult = nil
@@ -17,7 +17,7 @@ function Utils.Debounce(fn, delayS)
 
 		local thisInvocation = lastInvocation
 		delay(
-			delayS,
+			secondsDelay,
 			function()
 				if thisInvocation ~= lastInvocation then
 					return
