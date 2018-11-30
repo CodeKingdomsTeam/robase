@@ -4,3 +4,6 @@
 [submodule "modules/Utils"]
 	path = modules/Utils
 	url = https://github.com/CodeKingdomsTeam/lua-utils
+[submodule "modules/lua-fsm"]
+	path = modules/lua-fsm
+	url = https://github.com/unindented/lua-fsm
