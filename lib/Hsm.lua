@@ -23,7 +23,7 @@ function Hsm.new()
 					-- Call the on_leave_ function for the current state, if there is one.
 					local fsm = hsm.fsms[i]
 					if fsm.current and fsm["on_leave_" .. fsm.current] then
-						fsm["on_leave_" .. fsm.current](fsm, event, fsm.current, nil, ...)
+						fsm["on_leave_" .. fsm.current](fsm, event, fsm.current, "none", ...)
 					end
 
 					table.remove(hsm.fsms)
@@ -31,7 +31,7 @@ function Hsm.new()
 
 				-- Call the event function on the FSM that can handle it.
 				local handlingFsm = hsm.fsms[handlingFsmIndex]
-				handlingFsm[event](handlingFsm, event, handlingFsm.current, nil, ...)
+				handlingFsm[event](...)
 			end
 		end
 	end
@@ -67,6 +67,8 @@ function Hsm:pushFsm(fsmConfig)
 
 	local fsm = Fsm.create(fsmConfig)
 	table.insert(self.fsms, fsm)
+
+	-- Call the init event created above to trigger the transition to the initial state.
 	fsm.init()
 end
 
