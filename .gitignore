@@ -50,7 +50,7 @@ luac.out
 /robase-venv
 
 # JUnit test report
-/testReport.xml
+/junit-report*.xml
 
 node_modules
 
