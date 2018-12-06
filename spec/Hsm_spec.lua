@@ -74,6 +74,21 @@ describe(
 						testHsmWithInitialStates({{state = "A"}, {state = "B"}})
 					end
 				)
+				it(
+					"should throw if an FSM's initial state is neither a string nor a table",
+					function()
+						local hsm = Hsm.new()
+						assert.has.errors(
+							function()
+								hsm:pushFsm(
+									{
+										initial = 123
+									}
+								)
+							end
+						)
+					end
+				)
 			end
 		)
 		local function createHsm()

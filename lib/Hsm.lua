@@ -40,11 +40,7 @@ function Hsm.new()
 		hsm,
 		{
 			__index = function(_, key)
-				if Hsm[key] then
-					return Hsm[key]
-				else
-					return hsmEvent(key)
-				end
+				return Hsm[key] or hsmEvent(key)
 			end
 		}
 	)
@@ -60,6 +56,8 @@ function Hsm:pushFsm(fsmConfig)
 		initial = {state = initial}
 	elseif not initial then
 		initial = {state = "none"}
+	else
+		assert(type(initial) == "table")
 	end
 	initial.event = "init"
 	initial.defer = true
