@@ -6,4 +6,4 @@ set -o pipefail
 
 export PATH="$PWD/lua_install/bin:$PATH"
 
-busted -m './lib/?.lua' spec "$@"
+busted -m './lib/?.lua' -m './?/init.lua' spec "$@"

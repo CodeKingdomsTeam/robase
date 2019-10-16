@@ -6,6 +6,8 @@ set -o pipefail
 
 # Inspiration from https://github.com/LPGhatguy/lemur/blob/master/.travis.yml
 
+git submodule update --init --recursive
+
 yarn install --frozen-lockfile --non-interactive
 
 export LUA="lua=5.1"
@@ -25,7 +27,7 @@ hererocks lua_install -r^ --$LUA
 
 export PATH="$PWD/lua_install/bin:$PATH"
 
-ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1')
+ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1' 'luafilesystem 1.7.0-2' 'luasocket 3.0rc1-2')
 
 for ROCK in "${ROCKS[@]}"
 do
